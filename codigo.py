@@ -7,6 +7,12 @@ def main(pagina):
     
     def enviar_mensagem(evento):
         print('Enviar Mensagem')
+        
+        texto_mensagem = ft.Text(campo_mensagem.value)
+        chat.controls.append(texto_mensagem)
+        
+        campo_mensagem.value = ''
+        pagina.update()
     
     campo_mensagem = ft.TextField(label='Digite a sua mensagem')
     botao_enviar = ft.ElevatedButton('Enviar', on_click=enviar_mensagem)
