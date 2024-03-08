@@ -16,7 +16,7 @@ def main(pagina):
     
     def enviar_mensagem(evento):
         print('Enviar Mensagem')
-        pagina.pubsub.send_all(campo_mensagem.value)
+        pagina.pubsub.send_all('f{nome_usuario.value}: {campo_mensagem.value}')
         
         campo_mensagem.value = ''
         pagina.update()
