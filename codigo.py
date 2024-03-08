@@ -5,16 +5,23 @@ def main(pagina):
     
     chat = ft.Column() #Para as mensagens aparecerem uma a baixo da outra, se eu quiser diferente coloco como linha por exemplo
     
+    def enviar_mensagem_tunel(mensagem):
+        print(mensagem)
+        #Adicionando a mensagem para todos os usuários
+        texto_mensagem = ft.Text(mensagem)
+        chat.controls.append(texto_mensagem)
+        pagina.update()
+        
+    pagina.pubsub.subscribe(enviar_mensagem_tunel) #Tunel de comunicação
+    
     def enviar_mensagem(evento):
         print('Enviar Mensagem')
-        
-        texto_mensagem = ft.Text(campo_mensagem.value)
-        chat.controls.append(texto_mensagem)
+        pagina.pubsub.send_all(campo_mensagem.value)
         
         campo_mensagem.value = ''
         pagina.update()
     
-    campo_mensagem = ft.TextField(label='Digite a sua mensagem')
+    campo_mensagem = ft.TextField(label='Digite a sua mensagem', on_submit=enviar_mensagem)
     botao_enviar = ft.ElevatedButton('Enviar', on_click=enviar_mensagem)
     linha_enviar = ft.Row([campo_mensagem, botao_enviar]) #colocando um do lado do outro
     def entrar_chat(evento):
@@ -25,13 +32,12 @@ def main(pagina):
         pagina.remove(texto)
         #Adicionando o chat na página
         pagina.add(chat)
-        texto_entrada = ft.Text(f'{nome_usuario.value} Entrou no chat')
-        chat.controls.append(texto_entrada)#Adicionando o nome do usuário
+        pagina.pubsub.send_all(f'{nome_usuario.value} Entrou no chat')
         pagina.add(linha_enviar)
         #Só atualizando
         pagina.update()
         
-    titulo_popup = ft.Text('fBem-Vindo ao Chat da Vitoria')
+    titulo_popup = ft.Text('Bem-Vindo ao Chat da Vitoria')
     nome_usuario = ft.TextField(label='Escreva seu nome no Chat')
     botao_entrar = ft.ElevatedButton('Entrar no Chat', on_click=entrar_chat)
     popup = ft.AlertDialog(
@@ -52,4 +58,4 @@ def main(pagina):
     pagina.add(texto)
     pagina.add(botao_iniciar)
     
-ft.app(target=main) #Chamando o Main para app mobile, para fazer web coloca -> view=ft.WEB_BROWSER
+ft.app(target=main, view=ft.WEB_BROWSER) #Chamando o Main para app mobile e web
